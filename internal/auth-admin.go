@@ -1,13 +1,11 @@
 package internal
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"portfolio-blog/passwordhashing"
 	"portfolio-blog/pkg/database"
-	"portfolio-blog/pkg/models"
 
 	"github.com/gorilla/securecookie"
 	"github.com/joho/godotenv"
@@ -25,15 +23,9 @@ func init() {
 }
 
 func AuthAdmin(w http.ResponseWriter, r *http.Request) {
-	// Decode the request body into an Admin struct
-	var admin models.Admin
-	if err := json.NewDecoder(r.Body).Decode(&admin); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest) // Changed to BadRequest
-		return
-	}
-
-	verifyUsername := admin.Username
-	verifyPassword := admin.Password
+	// Read form values
+	verifyUsername := r.FormValue("username")
+	verifyPassword := r.FormValue("password")
 
 	// Connect to the database
 	db := ConnectDB(w)
@@ -41,7 +33,8 @@ func AuthAdmin(w http.ResponseWriter, r *http.Request) {
 	// Retrieve stored username and password hash from the database
 	storedUsername, storedPasswordHash, err := database.RetrieveUserDB(db, verifyUsername)
 	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Printf("Database error: %v", err)
+		http.Error(w, "Database Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -51,15 +44,23 @@ func AuthAdmin(w http.ResponseWriter, r *http.Request) {
 	// Check if credentials match
 	if storedUsername != verifyUsername || !match {
 		log.Printf("Login failed for username: %s. Username or Password invalid", verifyUsername)
-		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+		http.Error(w, "Invalid credentials", http.StatusUnauthorized) // Changed to Unauthorized
 		return
 	}
 
-	// Set the cookie and redirect to the target page
+	// Set the cookie
 	SetCookie(storedUsername, w)
-	redirectTarget := "/create-post"
-	http.Redirect(w, r, redirectTarget, http.StatusFound) // Changed status code to StatusFound
+
+	// Log successful login
 	log.Printf("Login successful for username: %s", verifyUsername)
+
+	// Redirect to the target page
+	// data := map[string]interface{}{} // Replace with actual data if needed
+	// err = templ.Render(w, "create-post", data)
+	// if err != nil {
+	// 	log.Printf("Error rendering template: %v", err)
+	// 	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// }
 }
 
 func CreateAdmin(w http.ResponseWriter, r *http.Request) {
@@ -91,43 +92,53 @@ func CreateAdmin(w http.ResponseWriter, r *http.Request) {
 }
 
 // for POST
-func LogoutHandler(response http.ResponseWriter, request *http.Request) {
-	ClearCookie(response)
-	http.Redirect(response, request, "/", 302)
-}
-
-// Cookie
-
 func SetCookie(userName string, response http.ResponseWriter) {
 	value := map[string]string{
 		"name": userName,
 	}
 	if encoded, err := cookieHandler.Encode("cookie", value); err == nil {
 		cookie := &http.Cookie{
-			Name:  "cookie",
-			Value: encoded,
-			Path:  "/",
+			Name:     "cookie",
+			Value:    encoded,
+			Path:     "/",
+			HttpOnly: true, // Prevent client-side access
+			Secure:   true, // Set to true if using HTTPS
 		}
 		http.SetCookie(response, cookie)
+	} else {
+		log.Printf("Error encoding cookie: %v", err)
 	}
 }
 
+// ClearCookie removes the authentication cookie
 func ClearCookie(response http.ResponseWriter) {
 	cookie := &http.Cookie{
-		Name:   "cookie",
-		Value:  "",
-		Path:   "/",
-		MaxAge: -1,
+		Name:     "cookie",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,   // Remove the cookie
+		HttpOnly: true, // Prevent client-side access
+		Secure:   true, // Set to true if using HTTPS
 	}
 	http.SetCookie(response, cookie)
 }
 
+// GetUserName retrieves the username from the cookie
 func GetUserName(request *http.Request) (userName string) {
 	if cookie, err := request.Cookie("cookie"); err == nil {
 		cookieValue := make(map[string]string)
 		if err = cookieHandler.Decode("cookie", cookie.Value, &cookieValue); err == nil {
 			userName = cookieValue["name"]
+		} else {
+			log.Printf("Error decoding cookie: %v", err)
 		}
 	}
 	return userName
+}
+
+// LogoutHandler handles user logout by clearing the cookie and redirecting
+func LogoutHandler(response http.ResponseWriter, request *http.Request) {
+	ClearCookie(response)
+	log.Println("User logged out")
+	http.Redirect(response, request, "/", http.StatusSeeOther) // Use StatusSeeOther (303) for redirection after POST
 }

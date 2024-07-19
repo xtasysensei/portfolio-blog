@@ -28,7 +28,8 @@ func Routes(route *chi.Mux) {
 	route.Get("/show-blogs", handlers.ShowBlogPost().ServeHTTP)
 	route.Get("/admin-login", handlers.AdminLogin().ServeHTTP)
 	route.Post("/create-admin", internal.CreateAdmin)
-	route.Post("/create-post", handlers.CreateBlogPost)
+	route.Post("/auth-admin", internal.AuthAdmin)
+	route.Post("/create-blog-post", handlers.CreateBlogPost)
 
 	route.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusFound)

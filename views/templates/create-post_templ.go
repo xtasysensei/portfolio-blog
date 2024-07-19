@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "portfolio-blog/views/components"
 
-func AdminLogin() templ.Component {
+func CreatePost() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -32,11 +32,11 @@ func AdminLogin() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Header("Login").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Header("Create Blog").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"section-1\"><h1 class=\"white\">Admin Login</h1><form class=\"login-form\" action=\"/auth-admin\" method=\"post\"><div class=\"form-group\"><label for=\"username\">Username:</label> <input type=\"text\" id=\"username\" name=\"username\" required></div><div class=\"form-group\"><label for=\"password\">Password:</label> <input type=\"password\" id=\"password\" name=\"password\" required></div><button type=\"submit\" class=\"blog-button-login\">Login</button></form></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"section-1\"><h2 class=\"white\">Create a New Blog Post</h2></div><div class=\"section-2\"><form action=\"/create-post\" method=\"POST\"><div class=\"grid-2\"><div><label for=\"title\">Title</label> <input type=\"text\" id=\"title\" name=\"title\" required></div><div><label for=\"author\">Author</label> <input type=\"text\" id=\"author\" name=\"author\" required></div><div><label for=\"slug\">Slug</label> <input type=\"text\" id=\"slug\" name=\"slug\" required></div><div><label for=\"tags\">Tags (comma separated)</label> <input type=\"text\" id=\"tags\" name=\"tags\"></div></div><div><label for=\"content\">Content</label> <textarea id=\"content\" name=\"content\" rows=\"10\" required></textarea></div><button type=\"submit\" class=\"blog-button\">Submit</button></form></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

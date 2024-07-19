@@ -5,12 +5,14 @@ import (
 	"fmt"
 )
 
-func RetrieveUserDB(db *sql.DB, query_username string) (string, string, error) {
-	var getusername string
-	var getpassword string
+func RetrieveUserDB(db *sql.DB, queryUsername string) (string, string, error) {
+	var getUsername string
+	var getPassword string
 
-	query := "SELECT username password_hash FROM admin WHERE username = $1"
-	err := db.QueryRow(query, query_username).Scan(&getusername, &getpassword)
+	// Corrected SQL query with a comma between columns
+	query := "SELECT username, password_hash FROM admin WHERE username = $1"
+
+	err := db.QueryRow(query, queryUsername).Scan(&getUsername, &getPassword)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", "", fmt.Errorf("user not found")
@@ -18,5 +20,5 @@ func RetrieveUserDB(db *sql.DB, query_username string) (string, string, error) {
 		return "", "", fmt.Errorf("error retrieving user data: %v", err)
 	}
 
-	return getusername, getpassword, nil
+	return getUsername, getPassword, nil
 }

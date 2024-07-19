@@ -19,3 +19,7 @@ func AdminLogin() *templ.ComponentHandler {
 	adminComponent := templates.AdminLogin()
 	return templ.Handler(adminComponent)
 }
+func CreatePostForm() *templ.ComponentHandler {
+	createPostComponent := templates.CreatePost()
+	return templ.Handler(createPostComponent)
+}

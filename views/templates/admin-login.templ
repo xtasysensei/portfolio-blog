@@ -9,7 +9,7 @@ templ AdminLogin() {
 <body>
     <div class="section-1">
         <h1 class="white">Admin Login</h1>
-        <form class="login-form" method="post">
+        <form class="login-form" action="/auth-admin" method="post">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -18,9 +18,10 @@ templ AdminLogin() {
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button hx-post="/auth-admin" type="submit" class="blog-button-login">Login</button>
+            <button type="submit" class="blog-button-login">Login</button>
         </form>
     </div>
 </body>
 </html>
+
 }
