@@ -1,0 +1,25 @@
+CREATE TABLE blogs (
+    post_id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    tags TEXT[]
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS admin (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT one_admin CHECK (id = 1 AND is_active)
+);
+CREATE TABLE IF NOT EXISTS admin (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT one_admin CHECK (id = 1 AND is_active)
+);

@@ -1,9 +1,10 @@
-package config
+package internal
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -25,7 +26,7 @@ func init() {
 
 	Connstr = fmt.Sprintf("user=%s dbname=%s password=%s host=%s sslmode=disable", user, dbname, password, host)
 }
-func ConnectDB() *sql.DB {
+func ConnectDB(w http.ResponseWriter) *sql.DB {
 	db, err := sql.Open("postgres", Connstr)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v", err)
@@ -39,5 +40,6 @@ func ConnectDB() *sql.DB {
 	}
 
 	fmt.Println("Successfully connected to database!")
+	w.WriteHeader(http.StatusOK)
 	return db
 }

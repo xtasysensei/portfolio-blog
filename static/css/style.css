@@ -72,10 +72,10 @@ a{
 
 .blog-button {
     margin: 13px;
-    border-radius: 15%;
+    border-radius: 10px;
     background-color: #7A7C80;
     border: none;
-    padding: 5px;
+    padding: 7px;
 }
 
 .blog-button:hover{
@@ -86,12 +86,31 @@ a{
     padding: 8px 12px;
 }
 
+
 .blog-button a{
     padding: 3px;
     font-size: 1rem;
     color: #fff;
 
 }
+.blog-button-login {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #7A7C80;
+    border: none;
+    padding: 10px;
+    font-size: 1.2rem;
+    color: #fff !important;
+    transition: 0.2s;
+}
+
+.blog-button-login:hover {
+    background-color: #000;
+    color: #fff !important;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
 .section-2 a{
     display: block;
     padding: 5px;
@@ -117,6 +136,43 @@ a{
     position: relative;
     padding-left: 10px;
 }
+/* Form styles */
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #1E2023;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #7A7C80;
+}
+
+.form-group input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #7A7C80;
+    border-radius: 5px;
+    background-color: #101214;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    border-color: lightgray;
+    outline: none;
+}
+
 
 /* media queres */
 @media(max-width:780px){
